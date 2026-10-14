@@ -3,7 +3,9 @@ import cors from "cors";
 import helmet from "helmet";
 
 import { env } from "./config/env";
-import { healthRouter } from "./modules/health/health.routes";
+import cookieParser from "cookie-parser";
+import { apiRouter } from "./modules/routes";
+import { errorHandler, notFound } from "./core/middleware/error.middleware";
 
 export const app = express();
 
@@ -12,12 +14,14 @@ app.use(helmet());
 app.use(
   cors({
     origin: env.CORS_ORIGIN,
+    credentials: true,
   }),
 );
 
 app.use(express.json());
 
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 app.get("/", (_req, res) => {
   res.json({
@@ -26,4 +30,7 @@ app.get("/", (_req, res) => {
   });
 });
 
-app.use("/api/health", healthRouter);
+app.use("/api", apiRouter);
+
+app.use(notFound);
+app.use(errorHandler);

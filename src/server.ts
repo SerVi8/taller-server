@@ -1,11 +1,12 @@
 import { app } from "./app.js";
 import { sequelize } from "./config/database.js";
 import { env } from "./config/env";
+import { initDatabase } from "./database/init.js";
+import { User } from "./database/models/index";
 
 const startServer = async (): Promise<void> => {
   try {
-    await sequelize.authenticate();
-    console.log("Database connected");
+    await initDatabase();
     
     app.listen(env.PORT, () => {
       console.log(
@@ -14,9 +15,8 @@ const startServer = async (): Promise<void> => {
     });
   } catch (error) {
     console.error("❌ Error starting server:", error);
-    console.error(error);
     process.exit(1);
   }
 };
 
-startServer();
+void startServer();

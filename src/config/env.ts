@@ -1,4 +1,5 @@
 import "dotenv/config";
+import { StringValue } from "ms";
 import { z } from "zod";
 
 const envSchema = z.object({
@@ -15,6 +16,9 @@ const envSchema = z.object({
   DATABASE_PASSWORD: z.string(),
 
   CORS_ORIGIN: z.string().min(1),
+
+  JWT_SECRET: z.string().min(32),
+  JWT_EXPIRES_IN: z.string().default("8h").transform((v) => v as StringValue),
 });
 
 const result = envSchema.safeParse(process.env);

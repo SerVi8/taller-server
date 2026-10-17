@@ -24,7 +24,7 @@ export class Client extends Model<
 Client.init(
   {
     id: {
-      type: DataTypes.UUID,
+      type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
     },

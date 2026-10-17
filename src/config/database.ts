@@ -1,5 +1,5 @@
 import { Sequelize } from "sequelize";
-import { env } from "./env";
+import { env } from "./env.js";
 
 export const sequelize = new Sequelize({
   database: env.DATABASE_NAME,
@@ -11,7 +11,7 @@ export const sequelize = new Sequelize({
 
   dialect: "postgres",
 
-  logging: env.NODE_ENV === "development" ? console.log : false,
+  logging: false,
 
   define: {
     timestamps: true,

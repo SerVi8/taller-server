@@ -26,12 +26,12 @@ export class WorkOrderService extends Model<
 WorkOrderService.init(
   {
     id: {
-      type: DataTypes.UUID,
+      type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
     },
     workOrderId: {
-      type: DataTypes.UUID,
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
     title: {

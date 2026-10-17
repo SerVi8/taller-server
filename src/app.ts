@@ -2,10 +2,10 @@ import express from "express";
 import cors from "cors";
 import helmet from "helmet";
 
-import { env } from "./config/env";
+import { env } from "./config/env.js";
 import cookieParser from "cookie-parser";
-import { apiRouter } from "./modules/routes";
-import { errorHandler, notFound } from "./core/middleware/error.middleware";
+import { apiRouter } from "./modules/routes.js";
+import { errorHandler, notFound } from "./core/middleware/error.middleware.js";
 
 export const app = express();
 

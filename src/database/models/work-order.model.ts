@@ -42,7 +42,7 @@ export class WorkOrder extends Model<
 WorkOrder.init(
   {
     id: {
-      type: DataTypes.UUID,
+      type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
     },

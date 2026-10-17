@@ -27,9 +27,13 @@ export class Vehicle extends Model<
 Vehicle.init(
   {
     id: {
-      type: DataTypes.UUID,
+      type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
+    },
+    clientId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
     },
     plate: {
       type: DataTypes.STRING(15),

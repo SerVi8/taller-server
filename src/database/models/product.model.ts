@@ -29,7 +29,7 @@ export class Product extends Model<
 Product.init(
   {
     id: {
-      type: DataTypes.UUID,
+      type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
     },

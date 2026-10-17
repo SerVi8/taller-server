@@ -42,7 +42,7 @@
     "moduleDetection": "force",
     "skipLibCheck": true,
     "esModuleInterop": true, //
-    "forceConsistentCasingInFileNames": true, //
+    "forceConsistentCasingInFileNames": true //
   },
   "include": ["src/**/*.ts", "src/**/*.d.ts"],
   "exclude": ["node_modules", "dist"]

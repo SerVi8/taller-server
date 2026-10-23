@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import { requireAuth } from "../../core/middleware/auth.middleware";
+import { requireAuth } from "../../core/middleware/auth.middleware.js";
 import {
   login,
   logout,

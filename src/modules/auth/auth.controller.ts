@@ -1,10 +1,11 @@
 import type { Request, Response } from "express";
-
+import { ApiError } from "../../core/errors/ApiError.js";
+import { errorCodes } from "../../core/errors/error-codes.js";
+import { coreErrorMessages } from "../../core/errors/error-messages.js";
 import { loginSchema } from "./auth.schema.js";
 import * as authService from "./auth.service.js";
 
-const COOKIE_NAME = "access_token";
-
+const cookieName = "access_token";
 const cookieOptions = {
   httpOnly: true,
   secure: process.env.NODE_ENV === "production",
@@ -12,67 +13,32 @@ const cookieOptions = {
   maxAge: 8 * 60 * 60 * 1000,
 };
 
-export const login = async (
-  req: Request,
-  res: Response,
-): Promise<void> => {
-  
-  const result = loginSchema.safeParse(req.body);
+export const login = async (req: Request, res: Response): Promise<void> => {
+  const { username, password } = loginSchema.parse(req.body);
+  const { token, user } = await authService.login(username, password);
 
-  if (!result.success) {
-    res.status(400).json({
-      message: "Datos de inicio de sesión inválidos",
-      errors: result.error.flatten().fieldErrors,
-    });
-    return;
-  }
-
-  try {
-    const { token, user } = await authService.login(
-      result.data.username,
-      result.data.password,
-    );
-
-
-    res.cookie(COOKIE_NAME, token, cookieOptions);
-
-    res.status(200).json({
-      user,
-    });
-  } catch {
-    res.status(401).json({
-      message: "Correo o contraseña incorrectos",
-    });
-  }
+  res.cookie(cookieName, token, cookieOptions);
+  res.status(200).json({ user });
 };
 
-export const me = async (
-  req: Request,
-  res: Response,
-): Promise<void> => {
+export const me = async (req: Request, res: Response): Promise<void> => {
   if (!req.user) {
-    res.status(401).json({
-      message: "No autenticado",
-    });
-    return;
+    throw new ApiError(
+      401,
+      errorCodes.unauthenticated,
+      coreErrorMessages.unauthenticated,
+    );
   }
 
-  res.status(200).json({
-    user: req.user,
-  });
+  res.status(200).json({ user: req.user });
 };
 
-export const logout = (
-  _req: Request,
-  res: Response,
-): void => {
-  res.clearCookie(COOKIE_NAME, {
+export const logout = (_req: Request, res: Response): void => {
+  res.clearCookie(cookieName, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
   });
 
-  res.status(200).json({
-    message: "Sesión cerrada correctamente",
-  });
+  res.status(204).send();
 };

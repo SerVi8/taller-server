@@ -1,36 +1,26 @@
 import type { ErrorRequestHandler, RequestHandler } from "express";
-import { ZodError } from "zod";
-import { UniqueConstraintError, ValidationError } from "sequelize";
-
-import { env } from "../../config/env.js";
 import { ApiError } from "../errors/ApiError.js";
+import { errorCodes } from "../errors/error-codes.js";
+import { coreErrorMessages } from "../errors/error-messages.js";
+import { normalizeError } from "../errors/normalize-error.js";
+import { toErrorResponse } from "../errors/error-response.js";
 
 export const notFound: RequestHandler = (req, _res, next) => {
-  next(new ApiError(404, `Ruta no encontrada: ${req.originalUrl}`));
+  next(
+    new ApiError(
+      404,
+      errorCodes.routeNotFound,
+      coreErrorMessages.routeNotFound,
+    ),
+  );
 };
 
 export const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
-  let status = 500;
-  let message = "Error interno del servidor";
+  const error = normalizeError(err);
 
-  if (err instanceof ApiError) {
-    status = err.statusCode;
-    message = err.message;
-  } else if (err instanceof ZodError) {
-    status = 400;
-    message = err.issues.map((i) => i.message).join(", ");
-  } else if (err instanceof UniqueConstraintError) {
-    status = 409;
-    message = "Ya existe un registro con esos datos";
-  } else if (err instanceof ValidationError) {
-    status = 400;
-    message = err.errors.map((e) => e.message).join(", ");
-  } else {
-    console.error(err); // errores inesperados solo al log, no al cliente
+  if (error.statusCode >= 500) {
+    console.error(err);
   }
 
-  res.status(status).json({
-    message,
-    ...(env.NODE_ENV === "development" && { stack: err.stack }),
-  });
+  res.status(error.statusCode).json(toErrorResponse(error));
 };

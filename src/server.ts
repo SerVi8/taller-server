@@ -1,8 +1,8 @@
 import { app } from "./app.js";
 import { sequelize } from "./config/database.js";
-import { env } from "./config/env";
+import { env } from "./config/env.js";
 import { initDatabase } from "./database/init.js";
-import { User } from "./database/models/index";
+import { User } from "./database/models/index.js";
 
 const startServer = async (): Promise<void> => {
   try {

@@ -13,7 +13,7 @@ export class Vehicle extends Model<
   InferCreationAttributes<Vehicle>
 > {
   declare id: CreationOptional<number>;
-  declare clientId: ForeignKey<string>;
+  declare clientId: ForeignKey<number>;
   declare plate: string;
   declare model: string | null;
   declare year: number | null;

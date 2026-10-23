@@ -14,7 +14,7 @@ export class Client extends Model<
   declare id: CreationOptional<number>;
   declare name: string;
   declare phone: string;
-  declare email: CreationOptional<string>;
+  declare email: CreationOptional<string | null>;
   declare active: CreationOptional<boolean>;
 
   declare readonly createdAt: CreationOptional<Date>;
@@ -43,8 +43,10 @@ Client.init(
       validate: {
         isEmail: true,
       },
-      set(value: string) {
-        this.setDataValue("email", value.trim().toLowerCase());
+      set(value: string | null) {
+        if (value) {
+          this.setDataValue("email", value.trim().toLowerCase());
+        }
       },
     },
     active: {

@@ -83,12 +83,12 @@ StockMovement.belongsTo(WorkOrder, {
   as: "workOrder",
 });
 
-User.hasMany(StockMovement, {
+/* User.hasMany(StockMovement, {
   foreignKey: "userId",
   as: "stockMovements",
   onDelete: "RESTRICT",
 });
-StockMovement.belongsTo(User, { foreignKey: "userId", as: "user" });
+StockMovement.belongsTo(User, { foreignKey: "userId", as: "user" }); */
 
 export {
   User,

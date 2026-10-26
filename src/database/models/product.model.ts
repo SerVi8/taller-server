@@ -15,9 +15,9 @@ export class Product extends Model<
   declare sku: string;
   declare name: string;
   declare description: string | null;
-  declare unit: CreationOptional<string>;
-  declare costPrice: number;
-  declare salePrice: number;
+  declare unit: string;
+  declare costPrice: CreationOptional<number>;
+  declare salePrice: CreationOptional<number>;
   declare stock: CreationOptional<number>;
   declare minStock: CreationOptional<number>;
   declare active: CreationOptional<boolean>;
@@ -35,7 +35,11 @@ Product.init(
     },
     sku: {
       type: DataTypes.STRING(50),
+      unique: true,
       allowNull: false,
+      set(value: string) {
+        this.setDataValue("sku", value.trim().toUpperCase());
+      },
     },
     name: {
       type: DataTypes.STRING(150),
@@ -52,13 +56,15 @@ Product.init(
     costPrice: {
       type: DataTypes.DECIMAL(12, 2),
       allowNull: false,
+      defaultValue: 0.0,
     },
     salePrice: {
       type: DataTypes.DECIMAL(12, 2),
       allowNull: false,
+      defaultValue: 0.0,
     },
     stock: {
-      type: DataTypes.DECIMAL(10, 2),
+      type: DataTypes.INTEGER,
       allowNull: false,
       defaultValue: 0,
     },

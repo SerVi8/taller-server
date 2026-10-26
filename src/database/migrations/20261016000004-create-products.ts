@@ -12,7 +12,7 @@ export const up: Migration = async ({ context: qi }) => {
     cost_price: { type: DataTypes.DECIMAL(12, 2), allowNull: false },
     sale_price: { type: DataTypes.DECIMAL(12, 2), allowNull: false },
     stock: {
-      type: DataTypes.DECIMAL(10, 2),
+      type: DataTypes.INTEGER,
       allowNull: false,
       defaultValue: 0,
     },

@@ -43,30 +43,32 @@ export const getById = async (id: number) => {
 };
 
 export const create = async (data: CreateClientDto) => {
-  const client = await runClientTransaction(() => sequelize.transaction(async (transaction) => {
-    const created = await Client.create(
-      {
-        name: data.name,
-        phone: data.phone,
-        email: data.email ?? null,
-        active: data.active ?? true,
-      },
-      { transaction },
-    );
-    if (data.vehicles.length) {
-      await Vehicle.bulkCreate(
-        data.vehicles.map((vehicle) => ({
-          ...vehicle,
-          clientId: created.id,
-          model: vehicle.model ?? null,
-          year: vehicle.year ?? null,
-          color: vehicle.color ?? null,
-        })),
+  const client = await runClientTransaction(() =>
+    sequelize.transaction(async (transaction) => {
+      const created = await Client.create(
+        {
+          name: data.name,
+          phone: data.phone,
+          email: data.email ?? null,
+          active: data.active ?? true,
+        },
         { transaction },
       );
-    }
-    return created;
-  }));
+      if (data.vehicles.length) {
+        await Vehicle.bulkCreate(
+          data.vehicles.map((vehicle) => ({
+            ...vehicle,
+            clientId: created.id,
+            model: vehicle.model ?? null,
+            year: vehicle.year ?? null,
+            color: vehicle.color ?? null,
+          })),
+          { transaction },
+        );
+      }
+      return created;
+    }),
+  );
   return getById(client.id);
 };
 
@@ -83,50 +85,52 @@ export const update = async (id: number, data: UpdateClientDto) => {
     }
   }
 
-  await runClientTransaction(() => sequelize.transaction(async (transaction) => {
-    const { vehicles, ...clientData } = data;
-    await client.update(omitUndefined(clientData), { transaction });
+  await runClientTransaction(() =>
+    sequelize.transaction(async (transaction) => {
+      const { vehicles, ...clientData } = data;
+      await client.update(omitUndefined(clientData), { transaction });
 
-    if (vehicles) {
-      const current = await Vehicle.findAll({
-        where: { clientId: id, active: true },
-        transaction,
-      });
-      const incomingIds = vehicles.flatMap((vehicle) =>
-        vehicle.id ? [vehicle.id] : [],
-      );
-      for (const vehicle of vehicles) {
-        const values = {
-          plate: vehicle.plate,
-          model: vehicle.model ?? null,
-          year: vehicle.year ?? null,
-          color: vehicle.color ?? null,
-          active: true,
-        };
-        if (vehicle.id) {
-          const existing =
-            current.find((item) => item.id === vehicle.id) ??
-            (await Vehicle.findOne({
-              where: { id: vehicle.id, clientId: id },
-              transaction,
-            }));
-          if (!existing) throw clientErrors.vehicleNotFound();
-          await existing.update(values, { transaction });
-        } else {
-          await Vehicle.create({ ...values, clientId: id }, { transaction });
+      if (vehicles) {
+        const current = await Vehicle.findAll({
+          where: { clientId: id, active: true },
+          transaction,
+        });
+        const incomingIds = vehicles.flatMap((vehicle) =>
+          vehicle.id ? [vehicle.id] : [],
+        );
+        for (const vehicle of vehicles) {
+          const values = {
+            plate: vehicle.plate,
+            model: vehicle.model ?? null,
+            year: vehicle.year ?? null,
+            color: vehicle.color ?? null,
+            active: true,
+          };
+          if (vehicle.id) {
+            const existing =
+              current.find((item) => item.id === vehicle.id) ??
+              (await Vehicle.findOne({
+                where: { id: vehicle.id, clientId: id },
+                transaction,
+              }));
+            if (!existing) throw clientErrors.vehicleNotFound();
+            await existing.update(values, { transaction });
+          } else {
+            await Vehicle.create({ ...values, clientId: id }, { transaction });
+          }
+        }
+        const removedIds = current
+          .filter((vehicle) => !incomingIds.includes(vehicle.id))
+          .map((vehicle) => vehicle.id);
+        if (removedIds.length) {
+          await Vehicle.update(
+            { active: false },
+            { where: { id: removedIds }, transaction },
+          );
         }
       }
-      const removedIds = current
-        .filter((vehicle) => !incomingIds.includes(vehicle.id))
-        .map((vehicle) => vehicle.id);
-      if (removedIds.length) {
-        await Vehicle.update(
-          { active: false },
-          { where: { id: removedIds }, transaction },
-        );
-      }
-    }
-  }));
+    }),
+  );
 
   return getById(id);
 };

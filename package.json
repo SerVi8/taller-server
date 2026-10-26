@@ -15,7 +15,8 @@
     "db:rollback": "tsx src/database/migrate.ts down",
     "db:status": "tsx src/database/migrate.ts status",
     "db:reset": "tsx src/database/migrate.ts reset",
-    "db:fresh": "docker exec lubrillantas-postgres psql -U postgres -d lubrillantas -c \"DROP SCHEMA public CASCADE; CREATE SCHEMA public;\" && npm run db:migrate"
+    "db:seed": "tsx src/database/seed.ts",
+    "db:fresh": "docker exec lubrillantas-postgres psql -U postgres -d lubrillantas -c \"DROP SCHEMA public CASCADE; CREATE SCHEMA public;\" && npm run db:migrate && npm run db:seed"
   },
   "keywords": [],
   "author": "",

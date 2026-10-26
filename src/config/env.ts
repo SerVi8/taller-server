@@ -9,11 +9,21 @@ const envSchema = z.object({
 
   PORT: z.coerce.number().int().positive().default(3000),
 
-  DATABASE_HOST: z.string().min(1),
+  DATABASE_URL: z.string().min(1).optional(),
+  DATABASE_HOST: z.string().default("localhost"),
   DATABASE_PORT: z.coerce.number().int().positive().default(5432),
-  DATABASE_NAME: z.string().min(1),
-  DATABASE_USER: z.string().min(1),
-  DATABASE_PASSWORD: z.string(),
+  DATABASE_NAME: z.string().default("lubrillantas"),
+  DATABASE_USER: z.string().default("postgres"),
+  DATABASE_PASSWORD: z.string().default(""),
+  DATABASE_SSL: z
+    .enum(["true", "false"])
+    .optional()
+    .transform((v) => v === "true"),
+
+  SEED_DEMO_DATA: z
+    .enum(["true", "false"])
+    .optional()
+    .transform((v) => v === "true"),
 
   CORS_ORIGIN: z.string().min(1),
 

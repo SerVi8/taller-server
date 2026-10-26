@@ -1,4 +1,5 @@
 import type { Request, Response } from "express";
+import { env } from "../../config/env.js";
 import { ApiError } from "../../core/errors/ApiError.js";
 import { errorCodes } from "../../core/errors/error-codes.js";
 import { coreErrorMessages } from "../../core/errors/error-messages.js";
@@ -6,10 +7,11 @@ import { loginSchema } from "./auth.schema.js";
 import * as authService from "./auth.service.js";
 
 const cookieName = "access_token";
+const isProduction = env.NODE_ENV === "production";
 const cookieOptions = {
   httpOnly: true,
-  secure: process.env.NODE_ENV === "production",
-  sameSite: "lax" as const,
+  secure: isProduction,
+  sameSite: isProduction ? ("none" as const) : ("lax" as const),
   maxAge: 8 * 60 * 60 * 1000,
 };
 
@@ -36,8 +38,8 @@ export const me = async (req: Request, res: Response): Promise<void> => {
 export const logout = (_req: Request, res: Response): void => {
   res.clearCookie(cookieName, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
+    secure: isProduction,
+    sameSite: isProduction ? "none" : "lax",
   });
 
   res.status(204).send();

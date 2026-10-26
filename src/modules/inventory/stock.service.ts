@@ -35,7 +35,7 @@ export const stockMovement = async ({
   if (q) {
     const like = { [Op.iLike]: `%${q}%` };
     Object.assign(where, {
-      [Op.or]: [{ "product.name": like }, { "product.sku": like }],
+      [Op.or]: [{ "$product.name$": like }, { "$product.sku$": like }],
     });
   }
 

@@ -9,6 +9,7 @@ import {
 import { sequelize } from "../../config/database.js";
 
 export const WORK_ORDER_STATUS = [
+  "price",
   "open",
   "in_progress",
   "completed",
@@ -20,7 +21,7 @@ export class WorkOrder extends Model<
   InferAttributes<WorkOrder>,
   InferCreationAttributes<WorkOrder>
 > {
-  declare id: CreationOptional<string>;
+  declare id: CreationOptional<number>;
   declare code: string;
   declare vehicleId: ForeignKey<number>;
   declare clientId: ForeignKey<number>;
@@ -30,8 +31,10 @@ export class WorkOrder extends Model<
   declare mileageOut: number | null;
   declare complaint: string;
   declare diagnosis: string | null;
-  declare discount: CreationOptional<string>; // DECIMAL llega como string
-  declare total: CreationOptional<string>;
+  declare observations: CreationOptional<string | null>;
+  declare recommendations: CreationOptional<string | null>;
+  declare discount: CreationOptional<number>;
+  declare total: CreationOptional<number>;
   declare openedAt: CreationOptional<Date>;
   declare completedAt: Date | null;
 
@@ -81,6 +84,14 @@ WorkOrder.init(
       allowNull: false,
     },
     diagnosis: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
+    observations: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
+    recommendations: {
       type: DataTypes.TEXT,
       allowNull: true,
     },

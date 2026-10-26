@@ -13,8 +13,8 @@ export class WorkOrderItem extends Model<
   InferCreationAttributes<WorkOrderItem>
 > {
   declare id: CreationOptional<number>;
-  declare workOrderId: ForeignKey<string>;
-  declare productId: ForeignKey<string>;
+  declare workOrderId: ForeignKey<number>;
+  declare productId: ForeignKey<number>;
   declare quantity: number;
   declare unitPrice: CreationOptional<number>;
   declare unitCost: CreationOptional<number>;

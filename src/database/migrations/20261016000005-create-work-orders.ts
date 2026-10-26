@@ -27,7 +27,13 @@ export const up: Migration = async ({ context: qi }) => {
       onDelete: "CASCADE",
     },
     status: {
-      type: DataTypes.ENUM("open", "in_progress", "completed", "cancelled"),
+      type: DataTypes.ENUM(
+        "price",
+        "open",
+        "in_progress",
+        "completed",
+        "cancelled",
+      ),
       allowNull: false,
       defaultValue: "open",
     },
@@ -35,6 +41,8 @@ export const up: Migration = async ({ context: qi }) => {
     mileage_out: { type: DataTypes.INTEGER, allowNull: true },
     complaint: { type: DataTypes.TEXT, allowNull: false },
     diagnosis: { type: DataTypes.TEXT, allowNull: true },
+    observations: { type: DataTypes.TEXT, allowNull: true },
+    recommendations: { type: DataTypes.TEXT, allowNull: true },
     discount: {
       type: DataTypes.DECIMAL(12, 2),
       allowNull: false,

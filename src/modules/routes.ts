@@ -3,6 +3,7 @@ import { healthRouter } from "./health/health.routes.js";
 import { authRouter } from "./auth/auth.routes.js";
 import { clientRouter } from "./clients/client.routes.js";
 import { productRouter, stockRouter } from "./inventory/inventori.routes.js";
+import { workOrderRouter } from "./work_orders/work-order.routes.js";
 
 export const apiRouter = Router();
 
@@ -11,3 +12,5 @@ apiRouter.use("/auth", authRouter);
 apiRouter.use("/clients", clientRouter);
 apiRouter.use("/product", productRouter);
 apiRouter.use("/stock", stockRouter);
+apiRouter.use("/orders", workOrderRouter);
+apiRouter.use("/work-orders", workOrderRouter);

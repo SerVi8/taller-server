@@ -13,9 +13,9 @@ export class WorkOrderService extends Model<
   InferCreationAttributes<WorkOrderService>
 > {
   declare id: CreationOptional<number>;
-  declare workOrderId: ForeignKey<string>;
-  declare title: CreationOptional<string>;
-  declare description: string | null;
+  declare workOrderId: ForeignKey<number>;
+  declare title: CreationOptional<string | null>;
+  declare description: string;
   declare price: CreationOptional<number>;
   declare complete: CreationOptional<boolean>;
 

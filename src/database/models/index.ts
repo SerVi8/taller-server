@@ -30,12 +30,12 @@ Client.hasMany(WorkOrder, {
 });
 WorkOrder.belongsTo(Client, { foreignKey: "clientId", as: "client" });
 
-User.hasMany(WorkOrder, {
+/* User.hasMany(WorkOrder, {
   foreignKey: "mechanicId",
   as: "workOrders",
   onDelete: "SET NULL",
 });
-WorkOrder.belongsTo(User, { foreignKey: "mechanicId", as: "mechanic" });
+WorkOrder.belongsTo(User, { foreignKey: "mechanicId", as: "mechanic" }); */
 
 // Orden → Servicios y Productos usados
 WorkOrder.hasMany(WorkOrderService, {

@@ -20,7 +20,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
   const { token, user } = await authService.login(username, password);
 
   res.cookie(cookieName, token, cookieOptions);
-  res.status(200).json({ user });
+  res.status(200).json({ user, token });
 };
 
 export const me = async (req: Request, res: Response): Promise<void> => {

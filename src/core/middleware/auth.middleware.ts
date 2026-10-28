@@ -10,12 +10,22 @@ import { coreErrorMessages } from "../errors/error-messages.js";
 
 const COOKIE_NAME = "access_token";
 
+const getTokenFromRequest = (req: Request): string | undefined => {
+  const authHeader = req.headers.authorization;
+  if (authHeader?.startsWith("Bearer ")) {
+    const bearerToken = authHeader.slice(7).trim();
+    if (bearerToken) return bearerToken;
+  }
+
+  return req.cookies?.[COOKIE_NAME];
+};
+
 export const requireAuth = async (
   req: Request,
   res: Response,
   next: NextFunction,
 ): Promise<void> => {
-  const token = req.cookies?.[COOKIE_NAME];
+  const token = getTokenFromRequest(req);
   if (!token) {
     next(
       new ApiError(

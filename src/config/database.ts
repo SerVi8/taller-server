@@ -1,5 +1,9 @@
+import dns from "node:dns";
 import { Sequelize, type Options } from "sequelize";
 import { env } from "./env.js";
+
+// Fuerza IPv4 primero para plataformas como Render que no tienen salida IPv6
+dns.setDefaultResultOrder("ipv4first");
 
 const useSsl = env.DATABASE_SSL ?? env.NODE_ENV === "production";
 

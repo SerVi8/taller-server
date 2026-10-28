@@ -16,6 +16,7 @@ app.use(helmet());
 const allowedOrigins = env.CORS_ORIGIN.split(",").map((origin) =>
   origin.trim().replace(/\/$/, ""),
 );
+console.log(allowedOrigins);
 
 app.use(
   cors({

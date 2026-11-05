@@ -4,11 +4,13 @@ import { authRouter } from "./auth/auth.routes.js";
 import { clientRouter } from "./clients/client.routes.js";
 import { productRouter, stockRouter } from "./inventory/inventori.routes.js";
 import { workOrderRouter } from "./work_orders/work-order.routes.js";
+import { userRouter } from "./user/user.routes.js";
 
 export const apiRouter = Router();
 
 apiRouter.use("/health", healthRouter);
 apiRouter.use("/auth", authRouter);
+apiRouter.use("/users", userRouter);
 apiRouter.use("/clients", clientRouter);
 apiRouter.use("/product", productRouter);
 apiRouter.use("/stock", stockRouter);
